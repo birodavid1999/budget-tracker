@@ -31,7 +31,7 @@
   --color-border-secondary: #E5E7EB;
   --color-border-tertiary: #F3F4F6;
   --color-border-danger: #fca5a5;
-  --border-radius-md: 8px;
+  --border-radius-md: 12px;
 
   /* iOS safe area */
   --safe-top: env(safe-area-inset-top, 0px);
@@ -40,7 +40,7 @@
   --safe-right: env(safe-area-inset-right, 0px);
 
   /* Tab bar magasság */
-  --tab-bar-h: calc(60px + var(--safe-bottom));
+  --tab-bar-h: calc(65px + var(--safe-bottom));
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -60,19 +60,21 @@ body {
   font-family: var(--font-sans);
 }
 
-/* ── Fő layout ── */
+/* ── Fő layout (Fixen képernyőhöz láncolva) ── */
 .app {
   display: flex;
   flex-direction: column;
   height: 100dvh;
   width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
-/* ── Header (státuszsor alá igazítva) ── */
+/* ── Header ── */
 .app-header {
   flex-shrink: 0;
-  padding-top: calc(var(--safe-top) + 12px);
-  padding-bottom: 12px;
+  padding-top: calc(var(--safe-top) + 14px);
+  padding-bottom: 14px;
   padding-left: calc(var(--safe-left) + 16px);
   padding-right: calc(var(--safe-right) + 16px);
   background: var(--color-background-primary);
@@ -89,18 +91,19 @@ body {
   letter-spacing: -0.3px;
 }
 
-/* ── Scrollozható tartalom ── */
+/* ── Görgethető tartalom zóna ── */
 .scroll-area {
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 0;
   padding-bottom: var(--tab-bar-h);
+  width: 100%;
 }
 
 .wrap {
-  padding: 1rem 1rem;
-  max-width: 640px;
+  padding: 16px;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -142,139 +145,186 @@ body {
   font-family: var(--font-sans);
 }
 
-.tab-item i {
-  font-size: 24px;
-  line-height: 1;
-}
+.tab-item i { font-size: 24px; line-height: 1; }
+.tab-item span { font-size: 10px; font-weight: 500; letter-spacing: 0.01em; }
+.tab-item.active { color: var(--color-text-primary); }
 
-.tab-item span {
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-}
-
-.tab-item.active {
-  color: var(--color-text-primary);
-}
-
-/* ── Oldalak ── */
-.page { display: none; }
+/* ── Oldalak megnyitása ── */
+.page { display: none; width: 100%; }
 .page.active { display: block; }
 
-/* ── Eredeti stílusok javítva ── */
-.entry-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+/* ── ÚJ: Mobilra optimalizált beviteli blokk (Egymás alá rendezve) ── */
+.entry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 12px;
+}
 
-/* 16px font-size megelőzi a nemkívánatos iOS Safari automatikus zoomolást */
+.input-group {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
 select, input[type=number] {
-  height: 44px;
+  height: 46px;
   border: 0.5px solid var(--color-border-secondary);
   border-radius: var(--border-radius-md);
   background: var(--color-background-primary);
   color: var(--color-text-primary);
-  font-size: 16px;
-  padding: 0 10px;
+  font-size: 16px; /* Megelőzi az iOS Safari auto-zoomot */
+  padding: 0 12px;
   outline: none;
   -webkit-appearance: none;
   appearance: none;
 }
+
 select {
-  flex: 1.4;
+  flex: 1;
   cursor: pointer;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239CA3AF' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 28px;
+  background-position: right 14px center;
+  padding-right: 32px;
 }
-input[type=number] { flex: 1; text-align: right; }
-select:focus, input:focus { border-color: #9CA3AF; }
+
+input[type=number] {
+  flex: 1;
+  text-align: right;
+}
+
+select:focus, input:focus {
+  border-color: #6B7280;
+}
 
 .add-btn {
-  height: 44px; padding: 0 14px;
-  border: 0.5px solid var(--color-border-secondary);
+  height: 46px;
+  width: 100%;
+  border: none;
   border-radius: var(--border-radius-md);
-  background: transparent; color: var(--color-text-primary);
-  font-size: 14px; cursor: pointer;
-  display: flex; align-items: center; gap: 6px;
-  white-space: nowrap; transition: background 0.15s;
+  background: var(--color-text-primary);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.15s;
   font-family: var(--font-sans);
-  -webkit-appearance: none; appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
 }
-.add-btn:active { background: var(--color-background-secondary); transform: scale(0.97); }
+.add-btn:active { opacity: 0.85; transform: scale(0.99); }
+
+.action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
 
 .section-label {
-  font-size: 11px; font-weight: 500;
+  font-size: 11px;
+  font-weight: 600;
   color: var(--color-text-tertiary);
-  letter-spacing: 0.07em; text-transform: uppercase;
-  margin: 0 0 8px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0 0 10px 0;
 }
 
-.ledger { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 4px; }
+/* ── Táblázat reszponzivitás fix ── */
+.ledger-wrapper {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.ledger {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
 .ledger th {
-  text-align: left; padding: 6px 10px;
-  color: var(--color-text-tertiary); font-weight: 500;
-  border-bottom: 0.5px solid var(--color-border-secondary); font-size: 12px;
+  text-align: left;
+  padding: 8px 6px;
+  color: var(--color-text-tertiary);
+  font-weight: 500;
+  border-bottom: 0.5px solid var(--color-border-secondary);
+  font-size: 11px;
 }
+
 .ledger td {
-  padding: 11px 10px;
+  padding: 12px 6px;
   border-bottom: 0.5px solid var(--color-border-tertiary);
-  color: var(--color-text-primary); vertical-align: middle;
+  color: var(--color-text-primary);
+  vertical-align: middle;
 }
+
 .ledger tr:last-child td { border-bottom: none; }
-.ledger tr:active td { background: var(--color-background-secondary); }
 
 .del-btn {
   background: none; border: none; cursor: pointer;
   color: var(--color-text-tertiary); font-size: 18px;
-  padding: 4px 6px; border-radius: 6px; transition: color 0.15s;
+  padding: 4px 6px; border-radius: 6px;
   -webkit-appearance: none; appearance: none;
 }
 .del-btn:active { color: var(--color-text-danger); }
 
 .cat-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 3px 9px; border-radius: 999px;
+  display: inline-flex; align-items: center;
+  padding: 4px 8px; border-radius: 8px;
   font-size: 12px; font-weight: 500;
+  white-space: nowrap;
 }
 
+/* ── Statisztika rács ── */
 .metric-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 10px; margin-bottom: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+  width: 100%;
 }
-.metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 14px 16px; }
+.metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 14px; }
 .metric p { margin: 0; }
 .metric .lbl { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; }
-.metric .val { font-size: 20px; font-weight: 600; }
+.metric .val { font-size: 18px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-.bar-wrap { margin-bottom: 1.2rem; }
-.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.bar-lbl { width: 85px; font-size: 12px; color: var(--color-text-secondary); text-align: right; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.bar-track { flex: 1; height: 20px; background: var(--color-background-secondary); border-radius: 4px; overflow: hidden; }
+/* ── Statisztika sávok ── */
+.bar-wrap { margin-bottom: 20px; width: 100%; }
+.bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; width: 100%; }
+.bar-lbl { width: 75px; font-size: 12px; color: var(--color-text-secondary); text-align: left; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar-track { flex: 1; height: 16px; background: var(--color-background-secondary); border-radius: 4px; overflow: hidden; }
 .bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s; }
-.bar-val { width: 58px; font-size: 12px; color: var(--color-text-secondary); text-align: right; flex-shrink: 0; }
+.bar-val { width: 65px; font-size: 12px; color: var(--color-text-secondary); text-align: right; flex-shrink: 0; font-weight: 500; }
 
-.empty-state { text-align: center; padding: 2rem 1rem; color: var(--color-text-tertiary); font-size: 13px; }
-.saved-flash { display: none; font-size: 12px; color: var(--color-text-success); align-items: center; gap: 4px; }
-.saved-flash.show { display: flex; }
-.divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 1.2rem 0; }
+.empty-state { text-align: center; padding: 24px 0; color: var(--color-text-tertiary); font-size: 13px; }
+.saved-flash { font-size: 13px; color: var(--color-text-success); display: none; align-items: center; gap: 4px; font-weight: 500; }
+.saved-flash.show { display: inline-flex; }
+.divider { border: none; border-top: 0.5px solid var(--color-border-secondary); margin: 20px 0; }
 
-/* PWA install banner */
+/* iOS főképernyő kihelyezési banner */
 #install-banner {
   display: none;
   background: var(--color-background-secondary);
   border: 0.5px solid var(--color-border-secondary);
   border-radius: var(--border-radius-md);
-  padding: 12px 14px;
-  margin-bottom: 14px;
+  padding: 14px;
+  margin-bottom: 16px;
   font-size: 13px;
   color: var(--color-text-secondary);
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
 }
 #install-banner.show { display: flex; }
-#install-banner i { font-size: 20px; color: var(--color-text-primary); flex-shrink: 0; }
-#install-banner .install-text { flex: 1; }
-#install-banner .install-text strong { display: block; color: var(--color-text-primary); margin-bottom: 2px; }
-#close-banner { background: none; border: none; cursor: pointer; color: var(--color-text-tertiary); padding: 4px; font-size: 16px; }
+#install-banner i { font-size: 20px; color: var(--color-text-primary); flex-shrink: 0; margin-top: 2px; }
+#install-banner .install-text { flex: 1; line-height: 1.4; }
+#install-banner .install-text strong { color: var(--color-text-primary); }
+#close-banner { background: none; border: none; cursor: pointer; color: var(--color-text-tertiary); padding: 2px; font-size: 16px; }
 </style>
 </head>
 <body>
@@ -292,56 +342,64 @@ select:focus, input:focus { border-color: #9CA3AF; }
         <div id="install-banner">
           <i class="ti ti-share"></i>
           <div class="install-text">
-            <strong>Tedd a főképernyőre!</strong>
-            Nyomd meg a <strong>Megosztás</strong> ikont, majd válaszd a <strong>„Főképernyőhöz adás"</strong> lehetőséget.
+            <strong>Tedd a főképernyőre!</strong><br>
+            Nyomd meg a <strong>Megosztás</strong> ikont alul, majd válaszd a <strong>„Főképernyőhöz adás"</strong> lehetőséget.
           </div>
           <button id="close-banner" onclick="closeBanner()"><i class="ti ti-x"></i></button>
         </div>
 
         <p class="section-label">Bevétel hozzáadása</p>
-        <div class="entry-row">
-          <select id="inc-cat">
-            <option value="Munkaber">Munkabér</option>
-            <option value="Szabaduszo">Szabadúszó</option>
-            <option value="Egyeb bevetel">Egyéb bevétel</option>
-          </select>
-          <input type="number" id="inc-amt" placeholder="összeg" min="0" inputmode="decimal" />
+        <div class="entry-form">
+          <div class="input-group">
+            <select id="inc-cat">
+              <option value="Munkaber">Munkabér</option>
+              <option value="Szabaduszo">Szabadúszó</option>
+              <option value="Egyeb bevetel">Egyéb bevétel</option>
+            </select>
+            <input type="number" id="inc-amt" placeholder="összeg" min="0" inputmode="decimal" />
+          </div>
           <button class="add-btn" onclick="addEntry('income')">
             <i class="ti ti-plus"></i> Mentés
           </button>
-          <span class="saved-flash" id="flash-income"><i class="ti ti-check"></i> Mentve</span>
+          <div class="action-row">
+            <span class="saved-flash" id="flash-income"><i class="ti ti-check"></i> Sikeresen mentve</span>
+          </div>
         </div>
 
         <hr class="divider">
 
         <p class="section-label">Kiadás hozzáadása</p>
-        <div class="entry-row">
-          <select id="exp-cat">
-            <option value="Kocsi">Kocsi</option>
-            <option value="Biztositas">Biztosítás</option>
-            <option value="Groceries">Élelmiszer</option>
-            <option value="Szorakozas">Szórakozás</option>
-          </select>
-          <input type="number" id="exp-amt" placeholder="összeg" min="0" inputmode="decimal" />
+        <div class="entry-form">
+          <div class="input-group">
+            <select id="exp-cat">
+              <option value="Kocsi">Kocsi</option>
+              <option value="Biztositas">Biztosítás</option>
+              <option value="Groceries">Élelmiszer</option>
+              <option value="Szorakozas">Szórakozás</option>
+            </select>
+            <input type="number" id="exp-amt" placeholder="összeg" min="0" inputmode="decimal" />
+          </div>
           <button class="add-btn" onclick="addEntry('expense')">
             <i class="ti ti-plus"></i> Mentés
           </button>
-          <span class="saved-flash" id="flash-expense"><i class="ti ti-check"></i> Mentve</span>
+          <div class="action-row">
+            <span class="saved-flash" id="flash-expense"><i class="ti ti-check"></i> Sikeresen mentve</span>
+          </div>
         </div>
 
         <hr class="divider">
         <p class="section-label">Legutóbbi tételek</p>
-        <div id="recent-list"></div>
+        <div class="ledger-wrapper" id="recent-list"></div>
       </div>
 
       <div class="page" id="page-list">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
           <p class="section-label" style="margin:0">Összes tétel</p>
-          <button class="add-btn" onclick="clearAll()" style="font-size:12px;color:var(--color-text-danger);border-color:var(--color-border-danger)">
-            <i class="ti ti-trash"></i> Törlés
+          <button onclick="clearAll()" style="font-size:12px;color:var(--color-text-danger);border:0.5px solid var(--color-border-danger);background:transparent;padding:6px 10px;border-radius:8px;font-family:var(--font-sans);font-weight:500;">
+            <i class="ti ti-trash"></i> Összes törlése
           </button>
         </div>
-        <div id="full-list"></div>
+        <div class="ledger-wrapper" id="full-list"></div>
       </div>
 
       <div class="page" id="page-stats">
@@ -373,14 +431,12 @@ select:focus, input:focus { border-color: #9CA3AF; }
 </div>
 
 <script>
-// Service Worker regisztrálása
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   });
 }
 
-// iOS install banner megjelenítése (ha nem standalone módban van)
 window.addEventListener('load', () => {
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
   const isStandalone = window.navigator.standalone === true;
@@ -429,7 +485,7 @@ function addEntry(type) {
   entries.push({ id: Date.now(), type, cat: catEl.value, amt, date: new Date().toLocaleDateString('hu-HU') });
   save();
   amtEl.value = '';
-  amtEl.blur(); // billentyűzet bezárása iOS-en mentés után
+  amtEl.blur(); 
   const flash = document.getElementById('flash-' + type);
   flash.classList.add('show');
   setTimeout(() => flash.classList.remove('show'), 1600);
@@ -458,12 +514,11 @@ function renderRecent() {
   const recent = [...entries].reverse().slice(0, 5);
   if (!recent.length) { el.innerHTML = '<div class="empty-state">Még nincs tétel</div>'; return; }
   el.innerHTML = `<table class="ledger">
-    <thead><tr><th>Kategória</th><th>Típus</th><th style="text-align:right">Összeg</th><th>Dátum</th></tr></thead>
+    <thead><tr><th>Kategória</th><th>Típus</th><th style="text-align:right">Összeg</th></tr></thead>
     <tbody>${recent.map(e => `<tr>
       <td>${badge(e.cat)}</td>
       <td style="color:${e.type==='income'?'var(--color-text-success)':'var(--color-text-danger)'};font-size:12px">${e.type==='income'?'bevétel':'kiadás'}</td>
-      <td style="text-align:right;font-weight:500">${e.amt.toLocaleString('hu-HU')}</td>
-      <td style="color:var(--color-text-tertiary);font-size:12px">${e.date}</td>
+      <td style="text-align:right;font-weight:600">${e.amt.toLocaleString('hu-HU')} Ft</td>
     </tr>`).join('')}</tbody>
   </table>`;
 }
@@ -472,13 +527,11 @@ function renderList() {
   const el = document.getElementById('full-list');
   if (!entries.length) { el.innerHTML = '<div class="empty-state">Még nincs tétel</div>'; return; }
   el.innerHTML = `<table class="ledger">
-    <thead><tr><th>Kategória</th><th>Típus</th><th style="text-align:right">Összeg</th><th>Dátum</th><th></th></tr></thead>
+    <thead><tr><th>Kategória</th><th style="text-align:right">Összeg</th><th></th></tr></thead>
     <tbody>${[...entries].reverse().map(e => `<tr>
-      <td>${badge(e.cat)}</td>
-      <td style="color:${e.type==='income'?'var(--color-text-success)':'var(--color-text-danger)'};font-size:12px">${e.type==='income'?'bevétel':'kiadás'}</td>
-      <td style="text-align:right;font-weight:500">${e.amt.toLocaleString('hu-HU')}</td>
-      <td style="color:var(--color-text-tertiary);font-size:12px">${e.date}</td>
-      <td><button class="del-btn" onclick="deleteEntry(${e.id})"><i class="ti ti-x"></i></button></td>
+      <td>${badge(e.cat)}<br><span style="color:var(--color-text-tertiary);font-size:10px">${e.date}</span></td>
+      <td style="text-align:right;font-weight:600;color:${e.type==='income'?'var(--color-text-success)':'var(--color-text-danger)'}">${e.type==='income'?'+':'-'}${e.amt.toLocaleString('hu-HU')} Ft</td>
+      <td style="text-align:right;width:40px;"><button class="del-btn" onclick="deleteEntry(${e.id})"><i class="ti ti-x"></i></button></td>
     </tr>`).join('')}</tbody>
   </table>`;
 }
@@ -505,9 +558,9 @@ function renderStats() {
   const savPct = totalInc > 0 ? Math.round(balance / totalInc * 100) : null;
 
   document.getElementById('metrics').innerHTML = `
-    <div class="metric"><p class="lbl">Összes bevétel</p><p class="val" style="color:var(--color-text-success)">${totalInc.toLocaleString('hu-HU')}</p></div>
-    <div class="metric"><p class="lbl">Összes kiadás</p><p class="val" style="color:var(--color-text-danger)">${totalExp.toLocaleString('hu-HU')}</p></div>
-    <div class="metric"><p class="lbl">Egyenleg</p><p class="val" style="color:${balance>=0?'var(--color-text-success)':'var(--color-text-danger)'}">${(balance>=0?'+':'')+balance.toLocaleString('hu-HU')}</p></div>
+    <div class="metric"><p class="lbl">Bevételek</p><p class="val" style="color:var(--color-text-success)">${totalInc.toLocaleString('hu-HU')} Ft</p></div>
+    <div class="metric"><p class="lbl">Kiadások</p><p class="val" style="color:var(--color-text-danger)">${totalExp.toLocaleString('hu-HU')} Ft</p></div>
+    <div class="metric"><p class="lbl">Egyenleg</p><p class="val" style="color:${balance>=0?'var(--color-text-success)':'var(--color-text-danger)'}">${balance.toLocaleString('hu-HU')} Ft</p></div>
     <div class="metric"><p class="lbl">Megtakarítás</p><p class="val">${savPct!==null?savPct+'%':'-'}</p></div>`;
 
   function bars(type, containerId) {
@@ -515,7 +568,7 @@ function renderStats() {
     entries.filter(e=>e.type===type).forEach(e=>{ cats[e.cat]=(cats[e.cat]||0)+e.amt; });
     const total = Object.values(cats).reduce((s,v)=>s+v,0);
     const el = document.getElementById(containerId);
-    if (!total) { el.innerHTML = '<div class="empty-state" style="padding:0.5rem 0">Nincs adat</div>'; return; }
+    if (!total) { el.innerHTML = '<div class="empty-state" style="padding:4px 0">Nincs adat</div>'; return; }
     const labels = {
       'Kocsi': 'Kocsi', 'Biztositas': 'Biztosítás', 'Groceries': 'Élelmiszer',
       'Szorakozas': 'Szórakozás', 'Munkaber': 'Munkabér',
@@ -527,7 +580,7 @@ function renderStats() {
       return `<div class="bar-row">
         <div class="bar-lbl">${labels[cat] || cat}</div>
         <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${c.bar}"></div></div>
-        <div class="bar-val">${amt.toLocaleString('hu-HU')}</div>
+        <div class="bar-val">${amt.toLocaleString('hu-HU')} Ft</div>
       </div>`;
     }).join('');
   }
@@ -540,7 +593,6 @@ function switchTab(name) {
   document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   document.getElementById('tab-'+name).classList.add('active');
-  // Scroll vissza a tetejére lapváltáskor
   document.querySelector('.scroll-area').scrollTop = 0;
   if (name==='list') renderList();
   if (name==='stats') renderStats();
